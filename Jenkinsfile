@@ -23,7 +23,7 @@ pipeline {
         // }
         stage ('Test') {
             steps {
-                echo 'Test staging on Jenkins'
+                sh 'Test -f build/index.html'
             }
         }
     }
