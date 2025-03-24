@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     stages {
         // stage('Build') {
         //     // agent {
@@ -24,7 +23,7 @@ pipeline {
 
 
 
-        stage ('Test') {
+        stage ('Build') {
             steps {
             
                 sh '''
