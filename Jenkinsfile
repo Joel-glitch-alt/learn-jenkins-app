@@ -12,8 +12,11 @@ pipeline {
             }
             steps {
                 sh '''
+                echo "Running Build Inside Docker"
+
                 echo "Checking Workspace Files"
                 ls -la
+
                 echo "Node.js & npm Versions"
                 node --version
                 npm --version
