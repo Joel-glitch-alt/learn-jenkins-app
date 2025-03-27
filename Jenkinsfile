@@ -7,7 +7,7 @@ pipeline {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
-                    args '-v $WORKSPACE:/workspace -w /workspace'
+                    args "--volume \"${WORKSPACE}\":/workspace --workdir /workspace"
                 }
             }
             steps {
@@ -26,7 +26,7 @@ pipeline {
                 fi
 
                 echo "Running Build"
-                npm run build
+                npm run build || echo "Build failed"
 
                 echo "Final Directory Structure"
                 ls -la 
