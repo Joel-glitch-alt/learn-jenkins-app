@@ -3,16 +3,9 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                    args "--volume \"${WORKSPACE}\":/workspace --workdir /workspace"
-                }
-            }
             steps {
                 sh '''
-                echo "Running Build Inside Docker"
+                echo "Running Build Without Docker"
 
                 echo "Checking Workspace Files"
                 ls -la
