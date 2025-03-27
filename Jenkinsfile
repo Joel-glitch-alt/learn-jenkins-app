@@ -1,34 +1,9 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
+        stage('Check Docker') {
             steps {
-                script {
-                    docker.image('node:18-alpine').inside {
-                        sh '''
-                        echo "Checking Workspace Files"
-                        ls -la
-
-                        echo "Node.js & npm Versions"
-                        node --version
-                        npm --version
-
-                        echo "Installing Dependencies"
-                        if [ -f package-lock.json ]; then
-                            npm ci
-                        else
-                            npm install
-                        fi
-
-                        echo "Running Build"
-                        npm run build || echo "Build failed"
-
-                        echo "Final Directory Structure"
-                        ls -la 
-                        '''
-                    }
-                }
+                sh 'docker run hello-world'
             }
         }
     }
