@@ -1,18 +1,6 @@
 pipeline {
     agent any
 
-
-//   stages {
-//         stage('Check Docker') {
-//             steps {
-//                 script {
-//                     sh 'docker --version'  // This checks if docker is available
-//                 }
-//             }
-//         }
-//     }
-    /////
-
     stages {
         stage('Without Docker') {
             steps {
@@ -21,7 +9,7 @@ pipeline {
         }
 
         stage('Test') {
-            agent{
+            agent {
                 docker {
                     image 'node:18-alpine'
                     args '-u root'
@@ -29,33 +17,36 @@ pipeline {
                 }
             }
             steps {
-                 sh '''
-                 test -f build/index.html && echo "File exists" || echo "File does not exist"
-                 npm test
-                 '''
+                sh '''
+                test -f build/index.html && echo "File exists" || echo "File does not exist"
+                npm test  # Ensure your test command generates a JUnit report
+                '''
             }
         }
 
-        post{
-            always {
-                junit 'test-results/junit.xml'
-            }
-        }
+        // Optionally include a stage for "With Docker"
+        // stage('With Docker') {
+        //     agent {
+        //         docker {
+        //             image 'node:18-alpine'
+        //             args '-u root'
+        //         }
+        //     }
+        //     steps {
+        //         sh '''
+        //             echo "Inside Docker"
+        //             node -v
+        //             npm -v
+        //         '''
+        //     }
+        // }
 
-    //     stage('With Docker') {
-    //         agent {
-    //             docker {
-    //                 image 'node:18-alpine'
-    //                 args '-u root'
-    //             }
-    //         }
-    //         steps {
-    //             sh '''
-    //                 echo "Inside Docker"
-    //                 node -v
-    //                 npm -v
-    //             '''
-    //         }
-    //     }
-     }
+    }
+
+    post {
+        always {
+            // Publish the JUnit test results from the generated XML
+            junit '**/test-results/junit.xml'
+        }
+    }
 }
