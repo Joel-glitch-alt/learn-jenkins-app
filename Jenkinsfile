@@ -19,6 +19,7 @@ pipeline {
                 echo 'This is outside Docker'
             }
         }
+
         stage('Test') {
             agent{
                 docker {
@@ -31,8 +32,13 @@ pipeline {
                  sh '''
                  test -f build/index.html && echo "File exists" || echo "File does not exist"
                  npm test
-
                  '''
+            }
+        }
+
+        post{
+            always {
+                junit 'test-results/junit.xml'
             }
         }
 
