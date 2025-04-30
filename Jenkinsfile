@@ -2,23 +2,23 @@ pipeline {
     agent any
 
 
-  stages {
-        stage('Check Docker') {
-            steps {
-                script {
-                    sh 'docker --version'  // This checks if docker is available
-                }
-            }
-        }
-    }
+//   stages {
+//         stage('Check Docker') {
+//             steps {
+//                 script {
+//                     sh 'docker --version'  // This checks if docker is available
+//                 }
+//             }
+//         }
+//     }
     /////
 
-    // stages {
-    //     stage('Without Docker') {
-    //         steps {
-    //             echo 'This is outside Docker'
-    //         }
-    //     }
+    stages {
+        stage('Without Docker') {
+            steps {
+                echo 'This is outside Docker'
+            }
+        }
 
     //     stage('With Docker') {
     //         agent {
