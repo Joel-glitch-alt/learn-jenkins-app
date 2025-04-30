@@ -1,27 +1,23 @@
 pipeline {
     agent any
 
-     stages {
+    stages {
         stage('Without Docker') {
             steps {
                 echo 'This is outside Docker'
-                dir('.') {
-                    echo "Current directory: ${pwd()}"
-                }
             }
         }
-    }
 
-        stage('w/ docker') {
+        stage('With Docker') {
             agent {
                 docker {
                     image 'node:18-alpine'
-                    args '-u root' // Run as root if permission issues occur
+                    args '-u root'
                 }
             }
             steps {
                 sh '''
-                    echo "With Docker"
+                    echo "Inside Docker"
                     node -v
                     npm -v
                 '''
