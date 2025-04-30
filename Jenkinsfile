@@ -19,6 +19,11 @@ pipeline {
                 echo 'This is outside Docker'
             }
         }
+        stage('Test') {
+            steps {
+                echo 'Test Stage!'
+            }
+        }
 
     //     stage('With Docker') {
     //         agent {
