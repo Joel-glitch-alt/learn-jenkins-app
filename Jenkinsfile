@@ -12,20 +12,20 @@ pipeline {
         }
     }
 
-    //     stage('w/ docker') {
-    //         agent {
-    //             docker {
-    //                 image 'node:18-alpine'
-    //                 args '-u root' // Run as root if permission issues occur
-    //             }
-    //         }
-    //         steps {
-    //             sh '''
-    //                 echo "With Docker"
-    //                 node -v
-    //                 npm -v
-    //             '''
-    //         }
-    //     }
-    // }
+        stage('w/ docker') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    args '-u root' // Run as root if permission issues occur
+                }
+            }
+            steps {
+                sh '''
+                    echo "With Docker"
+                    node -v
+                    npm -v
+                '''
+            }
+        }
+    }
 }
