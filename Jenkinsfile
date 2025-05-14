@@ -84,7 +84,7 @@ pipeline {
     }
      
 
-     Code Quality
+     //Code Quality
     post {
         always {
             junit 'test-results/junit.xml'
