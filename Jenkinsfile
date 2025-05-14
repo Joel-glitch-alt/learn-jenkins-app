@@ -27,16 +27,25 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'nodejs-18'
+    }
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        DOCKER_USERNAME = 'addition1905'
+        DOCKER_IMAGE = 'addition1905/jenkins-nodejs:latest'
+    }
+
     stages {
         stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
-                    reuseNode true   // ✅ correctly placed
+                    reuseNode true
                 }
             }
             steps {
-                //echo 'Hello World'
                 sh '''
                     ls -la
                     node --version
@@ -47,47 +56,35 @@ pipeline {
                 '''
             }
         }
-        
-        stage ('Test') {
+
+        stage('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
-
             steps {
                 sh '''
-                test -f build/index.html
-                npm test
+                    test -f build/index.html
+                    npm test
                 '''
             }
         }
 
-        //    stage ('Deployment') {
-        //     agent {
-        //         docker {
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }
-
-        //     steps {
-        //         sh '''
-        //             npm install netlify-cli --save-dev
-        //             netlify --version
-        //         '''
-        //     }
-        // }
-
-
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                }
+            }
+        }
     }
-     
 
-     //Code Quality
     post {
         always {
             junit 'test-results/junit.xml'
         }
     }
 }
+
