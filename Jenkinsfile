@@ -76,7 +76,7 @@ pipeline {
     agent any
 
     environment {
-        SCANNER_HOME = tool 'sonar-scanner'
+        SCANNER_HOME = tool 'sonar-scanner' // Must match the tool name in Jenkins Global Tool Config
         DOCKER_USERNAME = 'addition1905'
         DOCKER_IMAGE = 'addition1905/jenkins-nodejs:latest'
     }
@@ -123,12 +123,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 
     post {
-        always {
-            junit 'test-results/junit.xml'
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
-
