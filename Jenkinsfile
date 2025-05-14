@@ -24,12 +24,56 @@
 // }
 
 
+// pipeline {
+//     agent any
+//     stages {
+//         stage('Build') {
+//             agent {
+//                 docker {
+//                     image 'node:18-alpine'
+//                     reuseNode true   // ✅ correctly placed
+//                 }
+//             }
+//             steps {
+//                 //echo 'Hello World'
+//                 sh '''
+//                     ls -la
+//                     node --version
+//                     npm --version
+//                     npm ci
+//                     npm run build
+//                     ls -la
+//                 '''
+//             }
+//         }
+        
+//         stage ('Test') {
+//             agent {
+//                 docker {
+//                     image 'node:18-alpine'
+//                     reuseNode true
+//                 }
+//             }
+
+//             steps {
+//                 sh '''
+//                 test -f build/index.html
+//                 npm test
+//                 '''
+//             }
+//         }
+//     }
+     
+//   //Code Quality
+//     post {
+//         always {
+//             junit 'test-results/junit.xml'
+//         }
+//     }
+// }
+
 pipeline {
     agent any
-
-    tools {
-        nodejs 'nodejs-18'
-    }
 
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
