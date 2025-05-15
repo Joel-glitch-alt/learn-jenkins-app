@@ -77,8 +77,7 @@ pipeline {
     agent any
 
     environment {
-        SCANNER_HOME = tool 'sonar-scanner'  // Ensure this matches the tool name in Jenkins Global Tool Configuration
-        DOCKER_USERNAME = 'addition1905'
+        SCANNER_HOME = tool 'sonar-scanner'
         DOCKER_IMAGE = 'addition1905/jenkins-nodejs:latest'
     }
 
@@ -118,27 +117,26 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-             agent {
-               docker {
-                 image 'sonarsource/sonar-scanner-cli:latest'
-                 reuseNode true
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:latest'
+                    reuseNode true
+                }
+            }
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''
+                        sonar-scanner \
+                            -Dsonar.projectKey=my_project_key \
+                            -Dsonar.projectName="My Project" \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=src \
+                            -Dsonar.language=js \
+                            -Dsonar.sourceEncoding=UTF-8
+                    '''
+                }
+            }
         }
-    }
-        steps {
-             withSonarQubeEnv('sonar-server') {
-                sh '''
-                sonar-scanner \
-                    -Dsonar.projectKey=my_project_key \
-                    -Dsonar.projectName="My Project" \
-                    -Dsonar.projectVersion=1.0 \
-                    -Dsonar.sources=src \
-                    -Dsonar.language=js \
-                    -Dsonar.sourceEncoding=UTF-8
-            '''
-        }
-    }
-}
-
 
         stage('Quality Gate') {
             steps {
@@ -147,14 +145,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build and Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-creds') {
+                        def app = docker.build("${DOCKER_IMAGE}")
+                        app.push("latest")
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully.'
+            echo '✅ Pipeline completed successfully.'
         }
         failure {
-            echo 'Pipeline failed.'
+            echo '❌ Pipeline failed.'
         }
     }
 }
