@@ -141,16 +141,16 @@ pipeline {
     }
 }
 
-        stage('Docker Build & Push') {
-            steps {
-                script {
-                    def img = docker.build("${DOCKER_IMAGE}")
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        img.push()
-                    }
-                }
+       stage('Docker Build & Push') {
+    steps {
+        script {
+            def img = docker.build("${DOCKER_IMAGE}")
+            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                img.push()
             }
         }
+    }
+}
     }
 
     post {
