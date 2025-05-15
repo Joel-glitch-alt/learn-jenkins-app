@@ -140,18 +140,22 @@ pipeline {
         }
     }
 }
+
       // Docker Build & Push and Deploy..
-             stage('Docker Build & Push') {
-    steps {
-        cleanWs()
-        script {
-            def img = docker.build("${DOCKER_IMAGE}")
-            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                   stage('Docker Build & Push') {
+                 steps {
+                   script {
+            // 👇 Ensures Jenkins has access to Dockerfile and project files
+                   checkout scm
+
+                    def img = docker.build("${DOCKER_IMAGE}")
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
                 img.push()
             }
         }
     }
-       }
+      }
+
     }
 
     post {
