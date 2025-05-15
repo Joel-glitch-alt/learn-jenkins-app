@@ -117,22 +117,22 @@ pipeline {
             }
         }
 
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         withSonarQubeEnv('sonar-server') {
-        //             // Run sonar-scanner with necessary parameters
-        //             sh '''
-        //                 sonar-scanner \
-        //                     -Dsonar.projectKey=my_project_key \
-        //                     -Dsonar.projectName="My Project" \
-        //                     -Dsonar.projectVersion=1.0 \
-        //                     -Dsonar.sources=src \
-        //                     -Dsonar.language=js \
-        //                     -Dsonar.sourceEncoding=UTF-8
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    // Run sonar-scanner with necessary parameters
+                    sh '''
+                        sonar-scanner \
+                            -Dsonar.projectKey=my_project_key \
+                            -Dsonar.projectName="My Project" \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=src \
+                            -Dsonar.language=js \
+                            -Dsonar.sourceEncoding=UTF-8
+                    '''
+                }
+            }
+        }
 
         // stage('Quality Gate') {
         //     steps {
